@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+
+<link rel="import" href="./my-core-behaviors/my-element-loader-behavior.html">
+
+<link rel="import" href="./my-app-welcome/my-app-welcome.html">
+<!--<link rel="import" href="./my-app-main/my-app-main.html">-->
+
+<dom-module id="my-app-shell">
+  <template>
+    <style>
+    </style>
+
+    <firebase-app auth-domain="polybills-d5b9f.firebaseapp.com"
+      database-url="https://polybills-d5b9f.firebaseio.com/"
+      api-key="AIzaSyDuczkKiKZWNoyIJhAKVNyYcl5-K9V7kjo">
+    </firebase-app>
+
+    <my-app-main user="[[user]]">
+      <my-app-welcome user="{{user}}" on-signin-response="_onSigninResponse"></my-app-welcome>
+    </my-app-main>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app-shell',
+
+      behaviors: [
+        PolyBills.ElementLoaderBehavior
+      ],
+
+      _onSigninResponse: function (e) {
+        if (e.detail) {
+          this.resolveLoadElement('my-app-main/my-app-main.html');
+        }
+      },
+    });
+  </script>
+</dom-module>

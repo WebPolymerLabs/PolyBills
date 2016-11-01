@@ -1,0 +1,105 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+
+<link rel="import" href="../my-social-buttons/my-social-google-button.html">
+
+<link rel="import" href="../my-icons/my-icons.html">
+
+<dom-module id="my-app-welcome">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .content {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        padding-top: 24px;
+      }
+    </style>
+
+    <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError">
+    </firebase-auth>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <!--<app-drawer>
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="home" href="/">Home</a>
+          <a name="bill-categories" href="/bill-categories">Bill Categories</a>
+        </iron-selector>
+      </app-drawer>-->
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <!--<paper-icon-button icon="menu" drawer-toggle></paper-icon-button>-->
+            <div main-title>Poly Bills - Personal Bills Management</div>
+          </app-toolbar>
+        </app-header>
+
+        <div class="content">
+          <my-social-google-button on-tap="_onSigninTap"></my-social-google-button>
+        </div>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app-welcome',
+
+      properties: {
+        user: {
+          type: Object,
+          notify: true,
+          value: function () {
+            return null;
+          },
+        }
+      },
+
+      _onSigninTap: function () {
+        var that = this;
+        this.$.auth.signInWithPopup()
+            .then(function(response) {
+              // successful authentication response here
+              //console.log('[FIREBASE][AUTH]:', response);
+              that.fire('signin-response', response);
+            })
+            .catch(function(error) {
+              // unsuccessful authentication response here
+              //console.error('[FIREBASE][AUTH]:', error);
+              that.fire('signin-error', error);
+            });
+      },
+    });
+  </script>
+</dom-module>
