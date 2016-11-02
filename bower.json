@@ -18,7 +18,13 @@
     "polymer": "Polymer/polymer#^1.6.0",
     "polymerfire": "firebase/polymerfire#^0.10.2",
     "es6-promise": "^4.0.5",
-    "fetch": "^1.0.0"
+    "fetch": "^1.0.0",
+    "paper-avatar-button": "WebPaperElements/paper-avatar-button#^1.2.1",
+    "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
+    "paper-button": "PolymerElements/paper-button#^1.0.14",
+    "iron-icons": "PolymerElements/iron-icons#^1.1.3"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

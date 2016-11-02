@@ -17,7 +17,7 @@
       api-key="AIzaSyDuczkKiKZWNoyIJhAKVNyYcl5-K9V7kjo">
     </firebase-app>
 
-    <my-app-main user="[[user]]">
+    <my-app-main user="[[user]]" on-sign-out-request="_onSignOutRequest">
       <my-app-welcome user="{{user}}" on-signin-response="_onSigninResponse"></my-app-welcome>
     </my-app-main>
   </template>
@@ -32,8 +32,15 @@
 
       _onSigninResponse: function (e) {
         if (e.detail) {
+          this.auth = e.detail.auth;
           this.resolveLoadElement('my-app-main/my-app-main.html');
         }
+      },
+
+      _onSignOutRequest: function () {
+        this.auth.signOut().then(function () {
+          location.reload(true);
+        });
       },
     });
   </script>

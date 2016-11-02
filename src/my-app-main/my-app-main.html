@@ -8,14 +8,21 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-avatar-button/paper-avatar-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 
-<link rel="import" href="../my-core-behaviors/my-element-loader-behavior.html">
-
 <link rel="import" href="../my-icons/my-icons.html">
+
+<link rel="import" href="../my-callout-dialog/my-callout-dialog.html">
+
+<link rel="import" href="../my-core-behaviors/my-element-loader-behavior.html">
 
 <dom-module id="my-app-main">
   <template>
@@ -56,6 +63,26 @@
 
         font-weight: bold;
       }
+
+      #userMenuDialog {
+        --callout-dialog: {
+          top: 64px;
+          right: 0px;
+          margin-right: 6px;
+        };
+        --callout-dialog-arrow: {
+          right: 18px;
+        };
+      }
+
+      .user-menu-popup-content {
+        @apply(--layout-vertical);
+      }
+
+      .user-menu-popup-button.button-color-red {
+        background-color: #F44336;
+        color: white;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -81,7 +108,8 @@
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>Poly Bills - Personal Bills Management (Bem Vindo: [[user.displayName]])</div>
+            <div main-title>Poly Bills - Personal Bills Management</div>
+            <paper-avatar-button avatar="[[user.photoURL]]" on-tap="_onUserAvatarTap"></paper-avatar-button>
           </app-toolbar>
         </app-header>
 
@@ -96,6 +124,13 @@
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+
+    <my-callout-dialog id="userMenuDialog">
+      <div class="user-menu-popup-content">
+        <h3>[[user.displayName]]</h3>
+        <paper-button class="user-menu-popup-button button-color-red" on-tap="_onSignOutTap"><iron-icon icon="power-settings-new"></iron-icon>Sign Out</paper-button>
+      </div>
+    </my-callout-dialog>
   </template>
 
   <script>
@@ -130,7 +165,15 @@
 
       _showPage404: function() {
         this.page = '404';
-      }
+      },
+
+      _onUserAvatarTap: function () {
+        this.$.userMenuDialog.toggle();
+      },
+
+      _onSignOutTap: function () {
+        this.fire('sign-out-request');        
+      },
     });
   </script>
 </dom-module>

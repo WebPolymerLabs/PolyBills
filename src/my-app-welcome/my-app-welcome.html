@@ -92,7 +92,7 @@
             .then(function(response) {
               // successful authentication response here
               //console.log('[FIREBASE][AUTH]:', response);
-              that.fire('signin-response', response);
+              that.fire('signin-response', { auth: that.$.auth, data: response });
             })
             .catch(function(error) {
               // unsuccessful authentication response here
