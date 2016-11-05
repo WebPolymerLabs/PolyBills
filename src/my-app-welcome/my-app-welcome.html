@@ -86,9 +86,9 @@
         }
       },
 
-      _onSigninTap: function () {
+      signIn: function () {
         var that = this;
-        this.$.auth.signInWithPopup()
+        return this.$.auth.signInWithPopup()
             .then(function(response) {
               // successful authentication response here
               //console.log('[FIREBASE][AUTH]:', response);
@@ -99,6 +99,10 @@
               //console.error('[FIREBASE][AUTH]:', error);
               that.fire('signin-error', error);
             });
+      },
+
+      _onSigninTap: function () {
+        this.signIn();
       },
     });
   </script>

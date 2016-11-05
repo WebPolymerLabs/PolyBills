@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../bower_components/polymerfire/firebase.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 
 <link rel="import" href="./my-core-behaviors/my-element-loader-behavior.html">
@@ -13,22 +14,30 @@
     </style>
 
     <firebase-app auth-domain="polybills-d5b9f.firebaseapp.com"
-      database-url="https://polybills-d5b9f.firebaseio.com/"
-      api-key="AIzaSyDuczkKiKZWNoyIJhAKVNyYcl5-K9V7kjo">
+      database-url="https://polybills-d5b9f.firebaseio.com"
+      storage-bucket="polybills-d5b9f.appspot.com"
+      api-key="AIzaSyDuczkKiKZWNoyIJhAKVNyYcl5-K9V7kjo",
+      messaging-sender-id="643320248368">
     </firebase-app>
 
     <my-app-main user="[[user]]" on-sign-out-request="_onSignOutRequest">
-      <my-app-welcome user="{{user}}" on-signin-response="_onSigninResponse"></my-app-welcome>
+      <my-app-welcome id="appWelcome" user="{{user}}" on-signin-response="_onSigninResponse"></my-app-welcome>
     </my-app-main>
   </template>
 
   <script>
+    window.PolyBills = window.PolyBills || {};
+    window.PolyBills.AppContext = window.PolyBills.AppContext || {};
     Polymer({
       is: 'my-app-shell',
 
       behaviors: [
         PolyBills.ElementLoaderBehavior
       ],
+
+      attached: function () {
+        this.$.appWelcome.signIn();
+      },
 
       _onSigninResponse: function (e) {
         if (e.detail) {

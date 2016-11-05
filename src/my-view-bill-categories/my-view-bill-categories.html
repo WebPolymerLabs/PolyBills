@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../my-app-styles/shared-styles.html">
 
+<link rel="import" href="../my-bill-categories/my-bill-category-grid.html">
+
 <dom-module id="my-view-bill-categories">
   <template>
     <style include="shared-styles">
@@ -8,8 +10,14 @@
         display: block;
         padding: 10px;
       }
+
+      :host > h1 {
+        width: 100%;
+        text-align: center;
+      }
     </style>
     <h1>Bill Categories</h1>
+    <my-bill-category-grid></my-bill-category-grid>
   </template>
   <script>
     Polymer({
