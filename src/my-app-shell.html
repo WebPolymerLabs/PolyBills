@@ -21,7 +21,7 @@
     </firebase-app>
 
     <my-app-main user="[[user]]" on-sign-out-request="_onSignOutRequest">
-      <my-app-welcome id="appWelcome" user="{{user}}" on-signin-response="_onSigninResponse"></my-app-welcome>
+      <my-app-welcome user="{{user}}" show-login-options="[[showWelcomeLogin]]" on-signin-response="_onSigninResponse"></my-app-welcome>
     </my-app-main>
   </template>
 
@@ -39,11 +39,14 @@
         var that = this;
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
+            that.showWelcomeLogin = false;
             // console.log('User is signed in.', user)
             this.user = user;
             that._processSigninResponse({
               auth: firebase.auth(),
             });
+          } else {
+            that.showWelcomeLogin = true;
           }
         });
       },

@@ -66,7 +66,9 @@
         </app-header>
 
         <div class="content">
-          <my-social-google-button on-tap="_onSigninTap"></my-social-google-button>
+          <template is="dom-if" if="[[showLoginOptions]]">
+            <my-social-google-button on-tap="_onSigninTap"></my-social-google-button>
+          </template>          
         </div>
       </app-header-layout>
     </app-drawer-layout>
@@ -77,6 +79,11 @@
       is: 'my-app-welcome',
 
       properties: {
+        showLoginOptions: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
         user: {
           type: Object,
           notify: true,
