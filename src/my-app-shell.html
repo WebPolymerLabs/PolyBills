@@ -36,14 +36,27 @@
       ],
 
       attached: function () {
-        this.$.appWelcome.signIn();
+        var that = this;
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // console.log('User is signed in.', user)
+            this.user = user;
+            that._processSigninResponse({
+              auth: firebase.auth(),
+            });
+          }
+        });
       },
 
       _onSigninResponse: function (e) {
         if (e.detail) {
-          this.auth = e.detail.auth;
-          this.resolveLoadElement('my-app-main/my-app-main.html');
+          this._processSigninResponse(e.detail);
         }
+      },
+
+      _processSigninResponse: function (signinDetail) {
+        this.auth = signinDetail.auth;
+        this.resolveLoadElement('my-app-main/my-app-main.html');
       },
 
       _onSignOutRequest: function () {

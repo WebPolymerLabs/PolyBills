@@ -1,0 +1,29 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<dom-module id="my-bill-item">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      paper-card {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <paper-card>
+      <div class="card-content-container">
+        <div class="card-content">
+          <div class="card-header">[[model.name]]</div>
+        </div>
+      </div>
+    </paper-card>    
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bill-item'
+    });
+  </script>
+</dom-module>

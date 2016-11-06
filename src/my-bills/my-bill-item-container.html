@@ -1,0 +1,23 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="./my-bill-item.html">
+
+<dom-module id="my-bill-item-container">
+  <template>
+    <style>
+      :host {
+        @apply(--layout-vertical);
+      }
+
+      my-bill-item {
+        @apply(--layout-flex);
+      }
+    </style>
+    <my-bill-item model="[[model]]"></my-bill-item>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bill-item-container'
+    });
+  </script>
+</dom-module>

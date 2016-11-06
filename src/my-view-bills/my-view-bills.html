@@ -1,0 +1,27 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../my-app-styles/shared-styles.html">
+
+<link rel="import" href="../my-bills/my-bills-grid.html">
+
+<dom-module id="my-view-bills">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      :host > h1 {
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+    <h1>Bills</h1>
+    <my-bills-grid></my-bills-grid>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-view-bills'
+    });
+  </script>
+</dom-module>

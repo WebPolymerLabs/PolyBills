@@ -46,6 +46,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-TileColor" content="#3f51b5">
     <meta name="msapplication-tap-highlight" content="no">
 
+    <!-- Changed -->
+    <script src="/scripts/cond-load-polyfills.js"></script>
+    <!-- Changed -->
+
     <script>
       // Setup Polymer options
       window.Polymer = {
@@ -57,31 +61,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       (function() {
         'use strict';
 
-        var onload = function() {
-          // For native Imports, manually fire WebComponentsReady so user code
-          // can use the same code path for native and polyfill'd imports.
-          if (!window.HTMLImports) {
-            document.dispatchEvent(
-              new CustomEvent('WebComponentsReady', {bubbles: true})
-            );
-          }
-        };
+        // Changed
 
-        var webComponentsSupported = (
-          'registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')
+        /* Web Components Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () {
+            return ('registerElement' in document
+              && 'import' in document.createElement('link')
+              && 'content' in document.createElement('template')
+            );
+          },
+          '/bower_components/webcomponentsjs/webcomponents-lite.min.js', { async: true },
+          function(polyfillUsed) {
+            console.log('[PolyfillHelpers.loadPolyfillLib][WebComponents]->polyfillUsed: ', polyfillUsed);
+            // For native Imports, manually fire WebComponentsReady so user code
+            // can use the same code path for native and polyfill'd imports.
+            if (!window.HTMLImports) {
+              document.dispatchEvent(
+                new CustomEvent('WebComponentsReady', {bubbles: true})
+              );
+            }
+          }
         );
 
-        if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-          script.onload = onload;
-          document.head.appendChild(script);
-        } else {
-          onload();
-        }
+        /* Intl Polyfill*/
+        var intlPFillCheck = function () { return ('Intl' in window); };
+        window.PolyfillHelpers.loadPolyfillLib(
+          intlPFillCheck,
+          '/bower_components/intl/dist/Intl.min.js', { async: false },
+          function(polyfillUsed) {
+            console.log('[PolyfillHelpers.loadPolyfillLib][Intl]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+        window.PolyfillHelpers.loadPolyfillLib(
+          intlPFillCheck,
+          '/bower_components/intl/locale-data/json/en.json', { async: false },
+          function(polyfillUsed) {
+            console.log('[PolyfillHelpers.loadPolyfillLib][Intl-localce-en]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        /* Promise Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () { return ('Promise' in window); },
+          '/bower_components/es6-promise/es6-promise.auto.min.js', { async: false },
+          function(polyfillUsed) {
+            console.log('[PolyfillHelpers.loadPolyfillLib][Promise]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        /* Fetch Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () { return ('fetch' in window); },
+          '/bower_components/fetch/fetch.js', { async: false },
+          function(polyfillUsed) {
+            console.log('[PolyfillHelpers.loadPolyfillLib][Fetch]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        // Changed
       })();
 
       // Load pre-caching Service Worker
@@ -93,8 +131,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </script>
 
     <!-- Changed -->
-    <script src="/bower_components/es6-promise/es6-promise.auto.min.js"></script>
-    <script src="/bower_components/fetch/fetch.js"></script>
+    <script src="/bower_components/intl-messageformat/dist/intl-messageformat.min.js"></script>
+    <script src="/bower_components/intl-messageformat/dist/locale-data/en.js"></script>
     <!-- Changed -->
 
     <link rel="import" href="/src/my-app-shell.html">

@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="../my-core-behaviors/my-user-info-behavior.html">
+
+<link rel="import" href="./my-bill-item-container.html">
+
+<dom-module id="my-bills-grid">
+  <template>
+    <style include="iron-flex iron-flex-alignment"></style>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      .grid-item {
+        padding: 8px;
+      }
+    </style>
+    <firebase-query
+        id="query"
+        path="bills/[[uid]]"
+        data="{{data}}">
+    </firebase-query>
+
+    <iron-list id="listItems" items="[[items]]" as="bill">
+      <template>
+        <my-bill-item-container class="grid-item" model="[[bill]]"></my-bill-item-container>
+      </template>
+    </iron-list>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bills-grid',
+
+      behaviors: [
+        PolyBills.UserInfoBehavior
+      ],
+
+      properties: {
+        items: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                name: 'Financiamento de Veículo',
+                nextDueDate: new Date(),
+                amount: 123.45,
+                categories: [
+                  'personal', 'transportation'
+                ]
+              },{
+                name: 'Financiamento de Veículo',
+                nextDueDate: new Date(),
+                amount: 123.45,
+                categories: [
+                  'personal', 'transportation'
+                ]
+              }
+            ];
+          },
+          notify: true
+        },
+        data: {
+          type: Array,
+          value: function () {
+            return [];
+          },
+          notify: true
+        }
+      },
+
+      // observers: [
+      //   '_dataChanged(data.splices)'
+      // ],
+
+      _dataChanged: function (newValue) {
+        //console.log('[_dataChanged]:', newValue);
+        if (newValue) {
+          if ((newValue.indexSplices) && (newValue.indexSplices.length > 0)) {
+            var valueSplice = newValue.indexSplices[0];
+            if (valueSplice.addedCount > 0) {
+              var insertIndex = valueSplice.index + 1;
+              if (insertIndex >= valueSplice.object.length) {
+                this.push('items', valueSplice.object[valueSplice.index]);
+              } else {
+                var splices = this.items.splice(insertIndex, 0, valueSplice.object[valueSplice.index]);
+                this.notifySplices('items', splices);
+              }
+            }
+          }
+        } else {
+          this._itemsReset();
+        }
+      },
+
+      _itemsReset: function () {
+        this.items = [
+        ];
+      },
+      
+      ready: function () {
+        this.$.listItems.scrollTarget = window.PolyBills.AppContext.appScroller;
+      }
+    });
+  </script>
+</dom-module>

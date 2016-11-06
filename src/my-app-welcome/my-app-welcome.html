@@ -42,7 +42,7 @@
       }
     </style>
 
-    <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError">
+    <firebase-auth id="auth" user="{{user}}" provider="google" on-error="_handleError">
     </firebase-auth>
 
     <app-drawer-layout fullbleed>
@@ -99,6 +99,10 @@
               //console.error('[FIREBASE][AUTH]:', error);
               that.fire('signin-error', error);
             });
+      },
+
+      _handleError: function (e) {
+        console.error(e);
       },
 
       _onSigninTap: function () {
