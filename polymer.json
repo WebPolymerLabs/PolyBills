@@ -4,6 +4,7 @@
   "fragments": [
     "src/my-app-main/my-app-main.html",
     "src/my-view-home/my-view-home.html",
+    "src/my-view-bills/my-view-bills.html",
     "src/my-view-bill-categories/my-view-bill-categories.html",
     "src/my-view-404/my-view-404.html"
   ],
