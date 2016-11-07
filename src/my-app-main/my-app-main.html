@@ -34,6 +34,12 @@
         display: block;
       }
 
+      .toolbar-main-title {
+        overflow: hidden;
+        margin-right: 8px;
+        text-overflow: ellipsis;
+      }
+
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
@@ -111,7 +117,7 @@
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>Poly Bills - Personal Bills Management</div>
+            <div class="toolbar-main-title" main-title>Poly Bills - Personal Bills Management</div>
             <paper-avatar-button avatar="[[user.photoURL]]" on-tap="_onUserAvatarTap"></paper-avatar-button>
           </app-toolbar>
         </app-header>

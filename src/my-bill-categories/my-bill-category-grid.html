@@ -2,13 +2,6 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 
-<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="./my-bill-category-grid-card-container.html">
@@ -31,28 +24,14 @@
     <firebase-query
         id="query"
         path="categories"
-        data="{{data}}">
+        data="{{items}}">
     </firebase-query>
 
     <iron-list id="cardList" items="[[items]]" as="card" grid>
       <template>
-        <my-bill-category-grid-card-container class="grid-card" model="[[card]]" on-create-new-category="_onCreateNewCategory"></my-bill-category-grid-card-container>
+        <my-bill-category-grid-card-container class="grid-card" model="[[card]]"></my-bill-category-grid-card-container>
       </template>
     </iron-list>
-
-    <paper-dialog id="dialogNewCategory" entry-animation="scale-up-animation"
-              exit-animation="fade-out-animation">
-      <h2>New Category</h2>
-      <paper-dialog-scrollable>
-        <div>
-            <paper-input label="Category Name" value="{{newCard.name}}" autofocus></paper-input>
-        </div>
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button on-tap="_onButtonSaveTap" raised>Save</paper-button>
-      </div>
-    </paper-dialog>
 
   </template>
   <script>
@@ -66,79 +45,11 @@
             return [];
           },
           notify: true
-        },
-        uid: String,
-        data: {
-          type: Array,
-          value: function () {
-            return [];
-          },
-          notify: true
-        },
-        newCard: {
-          type: Object,
-          value: function () {
-            return {
-              name:''
-            };
-          },
         }
-      },
-
-      observers: [
-        '_dataChanged(data.splices)'
-      ],
-
-      _dataChanged: function (newValue) {
-        //console.log('[_dataChanged]:', newValue);
-        if (newValue) {
-          if ((newValue.indexSplices) && (newValue.indexSplices.length > 0)) {
-            var valueSplice = newValue.indexSplices[0];
-            if (valueSplice.addedCount > 0) {
-              var insertIndex = valueSplice.index + 1;
-              if (insertIndex >= valueSplice.object.length) {
-                this.push('items', valueSplice.object[valueSplice.index]);
-              } else {
-                var splices = this.items.splice(insertIndex, 0, valueSplice.object[valueSplice.index]);
-                this.notifySplices('items', splices);
-              }
-            }
-          }
-        } else {
-          this._itemsReset();
-        }
-      },
-
-      _itemsReset: function () {
-        this.items = [
-          {
-            isNewTemplate: true
-          }
-        ];
       },
       
       ready: function () {
         this.$.cardList.scrollTarget = window.PolyBills.AppContext.appScroller;
-        this.uid = firebase.auth().currentUser.uid;
-      },
-
-      _onCreateNewCategory: function () {
-        this.newCard = {
-          name: ''
-        };
-        this.$.dialogNewCategory.open();
-      },
-
-      _onButtonSaveTap: function () {
-        var newKey = firebase.default.database().ref().child('categories').push().key;
-        var updates = {};
-        updates['/categories/' + newKey] = this.newCard;
-
-        var that = this;
-        firebase.default.database().ref().update(updates)
-          .then(function () {
-            that.$.dialogNewCategory.close();
-          });
       },
     });
   </script>

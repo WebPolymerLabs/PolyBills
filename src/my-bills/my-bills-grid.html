@@ -23,7 +23,7 @@
     <firebase-query
         id="query"
         path="bills/[[uid]]"
-        data="{{data}}">
+        data="{{items}}">
     </firebase-query>
 
     <iron-list id="listItems" items="[[items]]" as="bill">
@@ -46,63 +46,12 @@
           type: Array,
           value: function () {
             return [
-              {
-                name: 'Financiamento de Veículo',
-                nextDueDate: new Date(),
-                amount: 123.45,
-                categories: [
-                  'personal', 'transportation'
-                ]
-              },{
-                name: 'Financiamento de Veículo',
-                nextDueDate: new Date(),
-                amount: 123.45,
-                categories: [
-                  'personal', 'transportation'
-                ]
-              }
             ];
           },
           notify: true
-        },
-        data: {
-          type: Array,
-          value: function () {
-            return [];
-          },
-          notify: true
         }
       },
 
-      // observers: [
-      //   '_dataChanged(data.splices)'
-      // ],
-
-      _dataChanged: function (newValue) {
-        //console.log('[_dataChanged]:', newValue);
-        if (newValue) {
-          if ((newValue.indexSplices) && (newValue.indexSplices.length > 0)) {
-            var valueSplice = newValue.indexSplices[0];
-            if (valueSplice.addedCount > 0) {
-              var insertIndex = valueSplice.index + 1;
-              if (insertIndex >= valueSplice.object.length) {
-                this.push('items', valueSplice.object[valueSplice.index]);
-              } else {
-                var splices = this.items.splice(insertIndex, 0, valueSplice.object[valueSplice.index]);
-                this.notifySplices('items', splices);
-              }
-            }
-          }
-        } else {
-          this._itemsReset();
-        }
-      },
-
-      _itemsReset: function () {
-        this.items = [
-        ];
-      },
-      
       ready: function () {
         this.$.listItems.scrollTarget = window.PolyBills.AppContext.appScroller;
       }

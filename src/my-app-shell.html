@@ -28,6 +28,18 @@
   <script>
     window.PolyBills = window.PolyBills || {};
     window.PolyBills.AppContext = window.PolyBills.AppContext || {};
+    window.PolyBills.AppContext.PreLoaders = window.PolyBills.AppContext.PreLoaders || {};
+
+    window.PolyBills.AppContext.PreLoaders.Categories = {
+      _resolve: null,
+      _reject: null,
+      deferred: null,
+    };
+    window.PolyBills.AppContext.PreLoaders.Categories.deferred = new Promise(function (resolve, reject) {
+      window.PolyBills.AppContext.PreLoaders.Categories._resolve = resolve;
+      window.PolyBills.AppContext.PreLoaders.Categories._reject = reject;
+    });
+
     Polymer({
       is: 'my-app-shell',
 
@@ -45,6 +57,15 @@
             that._processSigninResponse({
               auth: firebase.auth(),
             });
+
+            var dbUrl = firebase.default.app().options.databaseURL;
+            fetch(dbUrl + '/categories.json?auth=Mv8oxSvkAPl4TTFcIJo1coFGuWv3PfUE3e6Vi6qQ').then(function(response) {
+              var dataP = response.json().then(function (data) {
+                window.PolyBills.AppContext.PreLoaders.Categories._resolve(data);
+                window.PolyBills.AppContext.PreLoaders.Categories.data = data;
+              });
+            });
+
           } else {
             that.showWelcomeLogin = true;
           }
