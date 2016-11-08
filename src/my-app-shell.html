@@ -1,3 +1,5 @@
+<script>console.time('[my-app-shell][created]');</script>
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase.html">
@@ -6,7 +8,6 @@
 <link rel="import" href="./my-core-behaviors/my-element-loader-behavior.html">
 
 <link rel="import" href="./my-app-welcome/my-app-welcome.html">
-<!--<link rel="import" href="./my-app-main/my-app-main.html">-->
 
 <dom-module id="my-app-shell">
   <template>
@@ -47,9 +48,23 @@
         PolyBills.ElementLoaderBehavior
       ],
 
+      created: function () {
+        console.timeEnd('[my-app-shell][created]');
+        console.time('[my-app-shell][ready]');
+      },
+
+      ready: function () {
+        console.time('[my-app-shell][created]');
+        console.timeEnd('[my-app-shell][ready]');
+        console.time('[my-app-shell][attached]');
+      },
+
       attached: function () {
+        console.timeEnd('[my-app-shell][attached]');
         var that = this;
+        console.time('[Firebase][onAuthStateChanged]');
         firebase.auth().onAuthStateChanged(function(user) {
+          console.timeEnd('[Firebase][onAuthStateChanged]');
           if (user) {
             that.showWelcomeLogin = false;
             // console.log('User is signed in.', user)
@@ -58,11 +73,13 @@
               auth: firebase.auth(),
             });
 
+            console.time('[AppContext][PreLoaders][Categories]');
             var dbUrl = firebase.default.app().options.databaseURL;
             fetch(dbUrl + '/categories.json?auth=Mv8oxSvkAPl4TTFcIJo1coFGuWv3PfUE3e6Vi6qQ').then(function(response) {
               var dataP = response.json().then(function (data) {
                 window.PolyBills.AppContext.PreLoaders.Categories._resolve(data);
                 window.PolyBills.AppContext.PreLoaders.Categories.data = data;
+                console.timeEnd('[AppContext][PreLoaders][Categories]');
               });
             });
 
@@ -80,7 +97,10 @@
 
       _processSigninResponse: function (signinDetail) {
         this.auth = signinDetail.auth;
-        this.resolveLoadElement('my-app-main/my-app-main.html');
+        console.time('[my-app-main][load]');
+        this.resolveLoadElement('my-app-main/my-app-main.html', function () {
+          console.timeEnd('[my-app-main][load]');
+        });
       },
 
       _onSignOutRequest: function () {

@@ -47,7 +47,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-tap-highlight" content="no">
 
     <!-- Changed -->
+    <!--<script src="/scripts/requestAnimationFrameHandler.js"></script>-->
     <script src="/scripts/check-load-polyfills.js"></script>
+    <script src="/scripts/time-perf-helper.js"></script>
     <!-- Changed -->
 
     <script>
@@ -64,6 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Changed
 
         /* Web Components Polyfill*/
+        console.time('[WebComponents_Polyfill]');
         window.PolyfillHelpers.loadPolyfillLib(
           function () {
             return ('registerElement' in document
@@ -81,16 +84,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 new CustomEvent('WebComponentsReady', {bubbles: true})
               );
             }
+            console.timeEnd('[WebComponents_Polyfill]');
           }
         );
 
         /* Intl Polyfill*/
+        console.time('[Intl_Polyfill]');
         var intlPFillCheck = function () { return ('Intl' in window); };
         window.PolyfillHelpers.loadPolyfillLib(
           intlPFillCheck,
           '/bower_components/intl/dist/Intl.min.js', { async: false },
           function(polyfillUsed) {
             console.log('[PolyfillHelpers.loadPolyfillLib][Intl]->polyfillUsed: ', polyfillUsed);
+            console.timeEnd('[Intl_Polyfill]');
           }
         );
         window.PolyfillHelpers.loadPolyfillLib(
@@ -102,20 +108,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         );
 
         /* Promise Polyfill*/
+        console.time('[Promise_Polyfill]');
         window.PolyfillHelpers.loadPolyfillLib(
           function () { return ('Promise' in window); },
           '/bower_components/es6-promise/es6-promise.auto.min.js', { async: false },
           function(polyfillUsed) {
             console.log('[PolyfillHelpers.loadPolyfillLib][Promise]->polyfillUsed: ', polyfillUsed);
+            console.timeEnd('[Promise_Polyfill]');
           }
         );
 
         /* Fetch Polyfill*/
+        console.time('[Fetch_Polyfill]');
         window.PolyfillHelpers.loadPolyfillLib(
           function () { return ('fetch' in window); },
           '/bower_components/fetch/fetch.js', { async: false },
           function(polyfillUsed) {
             console.log('[PolyfillHelpers.loadPolyfillLib][Fetch]->polyfillUsed: ', polyfillUsed);
+            console.timeEnd('[Fetch_Polyfill]');
           }
         );
 
@@ -128,6 +138,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           navigator.serviceWorker.register('/service-worker.js');
         });
       }
+
+      console.time('[Header_Assets]');
     </script>
 
     <!-- Changed -->
@@ -148,6 +160,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         overflow: hidden;
       }
     </style>
+
+    <script>
+          console.timeEnd('[Header_Assets]');
+    </script>
   </head>
   <body>
     <my-app-shell></my-app-shell>

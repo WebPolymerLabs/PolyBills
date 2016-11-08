@@ -1,3 +1,4 @@
+<script>console.time('[my-view-bill-categories][created]');</script>
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
@@ -68,6 +69,15 @@
             };
           },
         }
+      },
+
+      created: function () {
+        console.timeEnd('[my-view-bill-categories][created]');
+        console.time('[my-view-bill-categories][ready]');
+      },
+
+      ready: function () {
+        console.timeEnd('[my-view-bill-categories][ready]');
       },
 
       _onCreateNewCategory: function () {

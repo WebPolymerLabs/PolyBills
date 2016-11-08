@@ -1,3 +1,5 @@
+<script>console.time('[my-bill-category-grid][created]');</script>
+
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
@@ -44,12 +46,26 @@
           value: function () {
             return [];
           },
-          notify: true
+          notify: true,
+          observer: '_itemsChanged' 
+        }
+      },
+
+      _itemsChanged: function (newValue) {
+        if (newValue) {
+          console.timeEnd('[firebase][category-grid][loaded]');
         }
       },
       
+      created: function () {
+        console.timeEnd('[my-bill-category-grid][created]');
+        console.time('[my-bill-category-grid][ready]');
+        console.time('[firebase][category-grid][loaded]');
+      },
+
       ready: function () {
         this.$.cardList.scrollTarget = window.PolyBills.AppContext.appScroller;
+        console.timeEnd('[my-bill-category-grid][ready]');
       },
     });
   </script>

@@ -11,20 +11,21 @@ window.PolyBills = window.PolyBills || {};
 
     isRequestInProgress: false,
 
-    resolveLoadElement: function (elementImportUrl, onComplete) {
+    resolveLoadElement: function (elementImportUrl, onComplete, onError) {
       var params = {
         elementImportUrl: elementImportUrl,
-        onComplete: onComplete
+        onComplete: onComplete,
+        onError: onError
       };
 
       if(this.isRequestInProgress){
         this.requestHeap.push(params);
       }else{
-        this.loadResources(elementImportUrl, onComplete);
+        this.loadResources(elementImportUrl, onComplete, onError);
       }
     },
 
-    loadResources: function(elementImportUrl, onComplete){
+    loadResources: function(elementImportUrl, onComplete, onError){
       var that = this;
       this.isRequestInProgress = true;
 
@@ -42,12 +43,15 @@ window.PolyBills = window.PolyBills || {};
 
               if(that.requestHeap.length){
                 var params = that.requestHeap.shift();
-                this.loadResources(params.elementImportUrl, params.onComplete);
+                this.loadResources(params.elementImportUrl, params.onComplete, params.onError);
               }
 
             },
             function (e) {
               console.error('Error on load the component remotely.', e);
+              if (onError) {
+                onError();
+              }
             },
             true);
         });
