@@ -4,7 +4,7 @@ upstream polybills_frontend  {
 
 server {
       listen 80;
-      server_name polybills-d5b9f.firebaseapp.dev.com
+      server_name polybills.firebaseapp.dev.com
       charset utf-8;
 
       listen 443 ssl;
@@ -12,8 +12,8 @@ server {
       ssl_certificate_key /etc/nginx/ssl/nginx-polybills.key;
 
       location ~ ^[/](_)[/] {
-        proxy_pass       https://polybills-d5b9f.firebaseapp.com;
-        proxy_set_header Host polybills-d5b9f.firebaseapp.com;
+        proxy_pass       https://polybills.firebaseapp.com;
+        proxy_set_header Host polybills.firebaseapp.com;
 
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
