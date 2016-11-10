@@ -9,6 +9,14 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "redirects": [
+      {
+        "source": "/__/auth/handler",
+        "destination": "/",
+        "type": 301
+      }
+    ],
+    "cleanUrls": true
   }
 }
