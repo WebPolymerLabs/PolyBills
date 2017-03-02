@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<dom-module id="my-bill-category-create-edit-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply(--layout-vertical);
+      }
+
+      :host > a  {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+        text-decoration: none;
+        color: #BDBDBD;
+      }
+      :host > a:hover 
+      {
+          color: #0091EA; 
+          text-decoration:none; 
+          cursor:pointer;  
+      }
+      
+      paper-card {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        overflow: hidden;
+
+        -webkit-transition: all 0.5s ease 0s;
+        -moz-transition: all 0.5s ease 0s;
+        transition: all 0.5s ease 0s;
+      }
+
+      .fill-content {
+        @apply(--layout-flex);
+      }
+
+      .content-button-new > paper-button {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-start-justified);
+        margin: 0px;
+        padding: 0px;
+
+        color: #BDBDBD;
+        --paper-button-ink-color: #0091EA;
+      }
+
+      .content-button-new > paper-button:hover {
+        color: #0091EA;
+      }
+
+      .content-button-new > paper-button > iron-icon {
+        @apply(--layout-self-start);
+        @apply(--layout-self-center);
+        height: 100px;
+        width: 100px;
+      }
+
+      .content-button-new > paper-button > span {
+        margin-left: 4px;
+        @apply(--paper-font-headline);
+      }
+      
+      .content-editing {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-start-justified);
+      }
+
+      .content-editing .card-image {
+        @apply(--layout-start);
+        width: 100px;
+        height: 100px;
+        color: #BDBDBD;
+      }
+      
+      .content-editing .card-content-container {
+        @apply(--layout-vertical);
+        @apply(--layout-flex);
+        overflow: hidden;
+        padding: 0px !important;
+      }
+
+      .content-editing .card-content {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+
+      .content-editing .card-actions {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+      }
+
+      :host *[hidden] {
+        display: none;
+      }
+      
+    </style>
+    <paper-card elevation="[[_cptCardElevation(isEditing)]]">
+      <div class="fill-content content-button-new">
+        <paper-button on-tap="_onButtonNewTap"><iron-icon icon="add-circle-outline"></iron-icon><span>NEW</span></paper-button>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bill-category-create-edit-card',
+
+      properties: {
+        isEditing: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+      },
+
+      _cptCardElevation: function (isEditing) {
+        if (isEditing) {
+          return 5;
+        }
+
+        return 0;
+      },
+
+      _onButtonNewTap: function () {
+        this.fire('create-new-category');
+      },
+    });
+  </script>
+</dom-module>

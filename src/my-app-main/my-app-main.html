@@ -1,0 +1,207 @@
+<script>console.time('[my-app-main][created]');</script>
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-avatar-button/paper-avatar-button.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+
+<link rel="import" href="../my-icons/my-icons.html">
+
+<link rel="import" href="../my-callout-dialog/my-callout-dialog.html">
+
+<link rel="import" href="../my-core-behaviors/my-element-loader-behavior.html">
+
+<dom-module id="my-app-main">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      .toolbar-main-title {
+        overflow: hidden;
+        margin-right: 8px;
+        text-overflow: ellipsis;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+
+        padding: 0 16px;
+
+        text-decoration: none;
+
+        color: var(--app-secondary-color);
+
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+
+        font-weight: bold;
+      }
+
+      #userMenuDialog {
+        --callout-dialog: {
+          top: 64px;
+          right: 0px;
+          margin-right: 6px;
+        };
+        --callout-dialog-arrow: {
+          right: 18px;
+        };
+      }
+
+      .user-menu-popup-content {
+        @apply(--layout-vertical);
+      }
+
+      .user-menu-popup-button.button-color-red {
+        background-color: #F44336;
+        color: white;
+      }
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer>
+        <app-header id="menuAppHeader">
+          <app-toolbar>Menu</app-toolbar>
+        </app-header>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="home" href="/">Home</a>
+          <a name="bills" href="/bills">Bills</a>
+          <a name="bill-categories" href="/bill-categories">Bill Categories</a>
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout id="appHeaderLayout" has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <div class="toolbar-main-title" main-title>Poly Bills - Personal Bills Management</div>
+            <paper-avatar-button avatar="[[user.photoURL]]" on-tap="_onUserAvatarTap"></paper-avatar-button>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="404"
+            role="main">
+          <my-view-home name="home"></my-view-home>
+          <my-view-bill-categories name="bill-categories"></my-view-bill-categories>
+          <my-view-bills name="bills"></my-view-bills>
+          <my-view-404 name="404"></my-view-404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+
+    <my-callout-dialog id="userMenuDialog">
+      <div class="user-menu-popup-content">
+        <h3>[[user.displayName]]</h3>
+        <paper-button class="user-menu-popup-button button-color-red" on-tap="_onSignOutTap"><iron-icon icon="power-settings-new"></iron-icon>Sign Out</paper-button>
+      </div>
+    </my-callout-dialog>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app-main',
+
+      behaviors: [
+        PolyBills.ElementLoaderBehavior
+      ],
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'home';
+      },
+
+      created: function () {
+        console.timeEnd('[my-app-main][created]');
+        console.time('[my-app-main][ready]');
+      },
+
+      ready: function () {
+        window.PolyBills.AppContext.appScroller = this.$.appHeaderLayout.header.scrollTarget;
+        //this.$.menuAppHeader.scrollTarget = window.PolyBills.AppContext.appScroller;
+        console.timeEnd('[my-app-main][ready]');
+      },
+
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+        var that = this;
+        console.time('[my-view-' + page + '][load]');
+        this.resolveLoadElement('../my-view-' + page + '/my-view-' + page + '.html', function () {
+          console.timeEnd('[my-view-' + page + '][load]');
+        }, function () {
+          that._showPage404();          
+        });
+      },
+
+      _showPage404: function() {
+        this.page = '404';
+      },
+
+      _onUserAvatarTap: function () {
+        this.$.userMenuDialog.toggle();
+      },
+
+      _onSignOutTap: function () {
+        this.fire('sign-out-request');        
+      },
+    });
+  </script>
+</dom-module>

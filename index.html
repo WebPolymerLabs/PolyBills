@@ -1,22 +1,11 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Polymer Starter Kit">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>My App</title>
-    <meta name="description" content="My App description">
+    <title>Poly Bills</title>
+    <meta name="description" content="Poly Bills - Personal Bills Management">
 
     <link rel="icon" href="/images/favicon.ico">
 
@@ -28,12 +17,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="My App">
+    <meta name="application-name" content="Poly Bills">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="My App">
+    <meta name="apple-mobile-web-app-title" content="Poly Bills">
 
     <!-- Homescreen icons -->
     <link rel="apple-touch-icon" href="/images/manifest/icon-48x48.png">
@@ -47,43 +36,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-TileColor" content="#3f51b5">
     <meta name="msapplication-tap-highlight" content="no">
 
+    <script src="/scripts/check-load-polyfills.js"></script>
+
     <script>
       // Setup Polymer options
       window.Polymer = {
         dom: 'shadow',
-        lazyRegister: true,
+        lazyRegister: true
       };
 
-      // Load webcomponentsjs polyfill if browser does not support native
-      // Web Components
+      // Load webcomponentsjs polyfill if browser does not support native Web Components
       (function() {
         'use strict';
-
-        var onload = function() {
-          // For native Imports, manually fire WebComponentsReady so user code
-          // can use the same code path for native and polyfill'd imports.
-          if (!window.HTMLImports) {
-            document.dispatchEvent(
-              new CustomEvent('WebComponentsReady', {bubbles: true})
+        /* Web Components Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () {
+            return ('registerElement' in document
+              && 'import' in document.createElement('link')
+              && 'content' in document.createElement('template')
             );
+          },
+          '/bower_components/webcomponentsjs/webcomponents-lite.min.js', { async: true },
+          function(polyfillUsed) {
+            console.debug('[PolyfillHelpers.loadPolyfillLib][WebComponents]->polyfillUsed: ', polyfillUsed);
+            // For native Imports, manually fire WebComponentsReady so user code
+            // can use the same code path for native and polyfill'd imports.
+            if (!window.HTMLImports) {
+              document.dispatchEvent(
+                new CustomEvent('WebComponentsReady', {bubbles: true})
+              );
+            }
           }
-        };
-
-        var webComponentsSupported = (
-          'registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')
         );
 
-        if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-          script.onload = onload;
-          document.head.appendChild(script);
-        } else {
-          onload();
-        }
+        /* Intl Polyfill*/
+        var intlPFillCheck = function () { return ('Intl' in window); };
+        window.PolyfillHelpers.loadPolyfillLib(
+          intlPFillCheck,
+          '/bower_components/intl/dist/Intl.min.js', { async: false },
+          function(polyfillUsed) {
+            console.debug('[PolyfillHelpers.loadPolyfillLib][Intl]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+        window.PolyfillHelpers.loadPolyfillLib(
+          intlPFillCheck,
+          '/bower_components/intl/locale-data/json/en.json', { async: false },
+          function(polyfillUsed) {
+            console.debug('[PolyfillHelpers.loadPolyfillLib][Intl-localce-en]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        /* Promise Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () { return ('Promise' in window); },
+          '/bower_components/es6-promise/es6-promise.auto.min.js', { async: false },
+          function(polyfillUsed) {
+            console.debug('[PolyfillHelpers.loadPolyfillLib][Promise]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        /* Fetch Polyfill*/
+        window.PolyfillHelpers.loadPolyfillLib(
+          function () { return ('fetch' in window); },
+          '/bower_components/fetch/fetch.js', { async: false },
+          function(polyfillUsed) {
+            console.debug('[PolyfillHelpers.loadPolyfillLib][Fetch]->polyfillUsed: ', polyfillUsed);
+          }
+        );
+
+        // Changed
       })();
 
       // Load pre-caching Service Worker
@@ -94,7 +115,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </script>
 
-    <link rel="import" href="/src/my-app.html">
+    <!-- Changed -->
+    <script src="/bower_components/intl-messageformat/dist/intl-messageformat.min.js"></script>
+    <script src="/bower_components/intl-messageformat/dist/locale-data/en.js"></script>
+    <!-- Changed -->
+
+    <link rel="import" href="/src/my-app-shell.html">
 
     <style>
       body {
@@ -103,11 +129,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         line-height: 1.5;
         min-height: 100vh;
         background-color: #eeeeee;
+        /* Changed */
+        overflow: hidden;
       }
     </style>
   </head>
   <body>
-    <my-app></my-app>
-    <!-- Built with love using Polymer Starter Kit -->
+    <my-app-shell></my-app-shell>
   </body>
 </html>

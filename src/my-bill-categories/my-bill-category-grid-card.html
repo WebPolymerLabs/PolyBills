@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<dom-module id="my-bill-category-grid-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      paper-card {
+        @apply(--layout-horizontal);
+      }
+      
+      .card-image {
+        @apply(--layout-start);
+        width: 100px;
+        height: 100px;
+      }
+      
+      .card-content-container {
+        @apply(--layout-flex);
+        overflow: hidden;
+      }
+      
+      .card-content {
+        height: 32px;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .card-header {
+        @apply(--paper-font-headline);
+        font-size: 16px;
+        line-height: 20px;
+      }
+    </style>
+    <paper-card>
+      <iron-image class="card-image" preload src="https://unsplash.it/200/200/?random" placeholder="/images/loading.png" fade alt="Icon" sizing="cover"></iron-image>
+      <div class="card-content-container">
+        <div class="card-content">
+          <div class="card-header">[[model.name]]</div>
+        </div>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bill-category-grid-card',
+    });
+  </script>
+</dom-module>

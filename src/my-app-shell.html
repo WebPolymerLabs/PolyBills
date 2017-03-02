@@ -1,0 +1,113 @@
+<script>console.time('[my-app-shell][created]');</script>
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+
+<link rel="import" href="./my-core-behaviors/my-element-loader-behavior.html">
+
+<link rel="import" href="./my-app-welcome/my-app-welcome.html">
+
+<dom-module id="my-app-shell">
+  <template>
+    <style>
+    </style>
+
+    <firebase-app auth-domain="polybills-2e6a1.firebaseapp.com"
+      database-url="https://polybills-2e6a1.firebaseio.com"
+      storage-bucket="polybills-2e6a1.appspot.com"
+      api-key="AIzaSyDgdcoFtpKOt9mA2pQvZrq0j3rpp49kbPQ",
+      messaging-sender-id="359480655673">
+    </firebase-app>
+
+    <my-app-main user="[[user]]" on-sign-out-request="_onSignOutRequest">
+      <my-app-welcome user="{{user}}" show-login-options="[[showWelcomeLogin]]" on-signin-response="_onSigninResponse"></my-app-welcome>
+    </my-app-main>
+  </template>
+
+  <script>
+    window.PolyBills = window.PolyBills || {};
+    window.PolyBills.AppContext = window.PolyBills.AppContext || {};
+    window.PolyBills.AppContext.PreLoaders = window.PolyBills.AppContext.PreLoaders || {};
+
+    window.PolyBills.AppContext.PreLoaders.Categories = {
+      _resolve: null,
+      _reject: null,
+      deferred: null,
+    };
+    window.PolyBills.AppContext.PreLoaders.Categories.deferred = new Promise(function (resolve, reject) {
+      window.PolyBills.AppContext.PreLoaders.Categories._resolve = resolve;
+      window.PolyBills.AppContext.PreLoaders.Categories._reject = reject;
+    });
+
+    Polymer({
+      is: 'my-app-shell',
+
+      behaviors: [
+        PolyBills.ElementLoaderBehavior
+      ],
+
+      created: function () {
+        console.timeEnd('[my-app-shell][created]');
+        console.time('[my-app-shell][ready]');
+      },
+
+      ready: function () {
+        console.time('[my-app-shell][created]');
+        console.timeEnd('[my-app-shell][ready]');
+        console.time('[my-app-shell][attached]');
+      },
+
+      attached: function () {
+        console.timeEnd('[my-app-shell][attached]');
+        var that = this;
+        console.time('[Firebase][onAuthStateChanged]');
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.timeEnd('[Firebase][onAuthStateChanged]');
+          if (user) {
+            that.showWelcomeLogin = false;
+            // console.log('User is signed in.', user)
+            this.user = user;
+            that._processSigninResponse({
+              auth: firebase.auth(),
+            });
+
+            console.time('[AppContext][PreLoaders][Categories]');
+            var dbUrl = firebase.default.app().options.databaseURL;
+            fetch(dbUrl + '/categories.json?auth=CcGfYc5fRrFS612ixlkd8l6lLpoYbCIOatklmCkc').then(function(response) {
+              var dataP = response.json().then(function (data) {
+                window.PolyBills.AppContext.PreLoaders.Categories._resolve(data);
+                window.PolyBills.AppContext.PreLoaders.Categories.data = data;
+                console.timeEnd('[AppContext][PreLoaders][Categories]');
+              });
+            });
+
+          } else {
+            that.showWelcomeLogin = true;
+          }
+        });
+      },
+
+      _onSigninResponse: function (e) {
+        if (e.detail) {
+          this._processSigninResponse(e.detail);
+        }
+      },
+
+      _processSigninResponse: function (signinDetail) {
+        this.auth = signinDetail.auth;
+        console.time('[my-app-main][load]');
+        this.resolveLoadElement('my-app-main/my-app-main.html', function () {
+          console.timeEnd('[my-app-main][load]');
+        });
+      },
+
+      _onSignOutRequest: function () {
+        this.auth.signOut().then(function () {
+          location.reload(true);
+        });
+      },
+    });
+  </script>
+</dom-module>

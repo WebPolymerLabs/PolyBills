@@ -1,0 +1,72 @@
+<script>console.time('[my-bill-category-grid][created]');</script>
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="./my-bill-category-grid-card-container.html">
+
+<dom-module id="my-bill-category-grid">
+  <template>
+    <style include="iron-flex iron-flex-alignment"></style>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      .grid-card {
+        padding: 8px;
+        width: 300px;
+        height: 116px;
+        max-width: 300px;
+      }
+    </style>
+    <firebase-query
+        id="query"
+        path="categories"
+        data="{{items}}">
+    </firebase-query>
+
+    <iron-list id="cardList" items="[[items]]" as="card" grid>
+      <template>
+        <my-bill-category-grid-card-container class="grid-card" model="[[card]]"></my-bill-category-grid-card-container>
+      </template>
+    </iron-list>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'my-bill-category-grid',
+
+      properties: {
+        items: {
+          type: Array,
+          value: function () {
+            return [];
+          },
+          notify: true,
+          observer: '_itemsChanged' 
+        }
+      },
+
+      _itemsChanged: function (newValue) {
+        if (newValue) {
+          console.timeEnd('[firebase][category-grid][loaded]');
+        }
+      },
+      
+      created: function () {
+        console.timeEnd('[my-bill-category-grid][created]');
+        console.time('[my-bill-category-grid][ready]');
+        console.time('[firebase][category-grid][loaded]');
+      },
+
+      ready: function () {
+        this.$.cardList.scrollTarget = window.PolyBills.AppContext.appScroller;
+        console.timeEnd('[my-bill-category-grid][ready]');
+      },
+    });
+  </script>
+</dom-module>

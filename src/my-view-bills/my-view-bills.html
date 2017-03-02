@@ -1,0 +1,178 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input-date-picker/paper-input-date-picker.html">
+<link rel="import" href="../../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
+
+<link rel="import" href="../my-app-styles/shared-styles.html">
+
+<link rel="import" href="../my-core-behaviors/my-user-info-behavior.html">
+
+<link rel="import" href="../my-bills/my-bills-grid.html">
+
+<dom-module id="my-view-bills">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      
+      :host > h1 {
+        width: 100%;
+        text-align: center;
+      }
+      
+      paper-fab {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        opacity: 0.2;
+      }
+
+      paper-fab:hover
+      ,paper-fab:focus {
+        opacity: 1;
+      }
+
+      .new-bill-content {
+        width: 500px;
+        height: 300px;
+      }
+    </style>
+    <h1>Bills</h1>
+    <my-bills-grid></my-bills-grid>
+    <paper-fab icon="add" title="New Bill" on-tap="_onCreateNewBill"></paper-fab>
+
+    <paper-dialog id="dialogNewBill" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>New Bill</h2>
+      <paper-dialog-scrollable>
+        <div class="new-bill-content">
+          <paper-input label="Bill Name" value="{{newCard.name}}" autofocus></paper-input>
+          <paper-input-date-picker
+            value="{{newCard.nextDueDate}}"
+            label="Next Due Date">
+          </paper-input-date-picker>
+          <paper-input label="Amount" value="{{newCard.amount}}" type="number">
+             <div prefix>$</div>
+          </paper-input>
+          <paper-input-autocomplete-chips 
+            local-candidates="[[availableCategories]]" 
+            selected-objects="{{_selectedItems}}"
+            label="Categories" 
+            suggestions-position="top"
+            max-suggestions="3"
+            search-on-got-focus 
+            search-if-empty 
+            remove-selected-from-suggestions
+            no-chip-image>
+          </paper-input-autocomplete-chips>
+        </div>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onButtonSaveTap" raised>Save</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-view-bills', 
+
+      behaviors: [
+        PolyBills.UserInfoBehavior
+      ],
+
+      properties: {
+        availableCategories: {
+          type: Array,
+          value: function () {
+            return [];
+          },
+          notify: true
+        },
+        _selectedItems: {
+          type: Array,
+          value: function () {
+            return [];
+          }
+        },
+        newCard: {
+          type: Object,
+          value: function () {
+            return {
+              name:''
+            };
+          },
+        }
+      },
+
+      get selectedCategories() {
+        return this._processSelectedTeams(this._selectedItems);
+      },
+
+      _processSelectedTeams: function(selectedOjectsAutoComplete) {
+        var selectedTeams = [];
+        for (var i = 0; i < selectedOjectsAutoComplete.length; i++) {
+          var curItem = selectedOjectsAutoComplete[i];
+
+          selectedTeams.push(curItem.key);
+        }
+        return selectedTeams;
+      },
+      
+      ready: function () {
+        var that = this;
+        window.PolyBills.AppContext.PreLoaders.Categories.deferred.then(function (data) {
+          // console.log('availableCategories:', data);
+          if (data) {
+            for (var key in data) {
+              if (data.hasOwnProperty(key)) {
+                // console.log(key + " -> " + data[key]);
+                that.push('availableCategories', {
+                  key: key,
+                  text: data[key].name,
+                  imgUrl: null
+                });
+              }
+            }
+          }
+        })
+      },
+
+      _onCreateNewBill: function () {
+        this.newCard = {
+          name: '',
+          nextDueDate: new Date(),
+          amount: null,
+          categories: []
+        };
+        this._selectedItems = [];
+        this.$.dialogNewBill.open();
+      },
+
+      _onButtonSaveTap: function () {
+        var newKey = firebase.default.database().ref().child('bills').push().key;
+        var updates = {};
+        updates['/bills/' + this.uid + '/' + newKey] = {
+          name: this.newCard.name,
+          nextDueDate: (this.newCard.nextDueDate) ? this.newCard.nextDueDate.getTime() : null,
+          amount: Number(this.newCard.amount),
+          categories: this.selectedCategories
+        };
+
+        var that = this;
+        firebase.default.database().ref().update(updates)
+          .then(function () {
+            that.$.dialogNewBill.close();
+          });
+      },
+    });
+  </script>
+</dom-module>

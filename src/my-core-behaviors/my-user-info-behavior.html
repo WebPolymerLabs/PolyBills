@@ -1,0 +1,24 @@
+<!-- POLYMER -->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<script>
+window.PolyBills = window.PolyBills || {};
+(function(PolyBills){
+
+  PolyBills.UserInfoBehaviorImpl = {
+    properties: {
+      uid: {
+        type: String,
+        value: function () {
+          return firebase.auth().currentUser.uid;
+        }
+      },
+    }
+  };
+
+  PolyBills.UserInfoBehavior = [
+    PolyBills.UserInfoBehaviorImpl
+  ];
+
+}(window.PolyBills));
+</script>
