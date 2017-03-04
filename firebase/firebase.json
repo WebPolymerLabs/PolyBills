@@ -17,6 +17,13 @@
         "type": 301
       }
     ],
+    "headers": [{
+      "source" : "/service-worker.js",
+      "headers" : [{
+        "key" : "Cache-Control",
+        "value" : "max-age=1"
+      }]
+    }],
     "cleanUrls": true
   }
 }

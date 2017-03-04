@@ -16,5 +16,19 @@ module.exports = {
     '.build/bower_components/intl-messageformat/dist/locale-data/en.js'
   ],
   navigateFallback: 'index.html',
-  navigateFallbackWhitelist: [/^(?!\/__)/]
+  navigateFallbackWhitelist: [/^(?!\/__)/],
+  runtimeCaching: [
+    {
+      urlPattern: /\/fonts\.googleapis\.com\/css/,
+      handler: 'cacheFirst'
+    },
+    {
+      urlPattern: /\/lh5\.googleusercontent\.com\//,
+      handler: 'networkFirst'
+    },
+    {
+      urlPattern: /\/unsplash\.it\/200\/200\//,
+      handler: 'networkFirst'
+    }
+  ]
 };
