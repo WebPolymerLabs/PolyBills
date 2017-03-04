@@ -14,7 +14,16 @@ module.exports = {
   staticFileGlobs: [
     '/index.html',
     '/manifest.json',
-    '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    '/images/**/*',
+    '/scripts/**/*',
+    "/bower_components/webcomponentsjs/webcomponents-lite.min.js",
+    "/bower_components/intl/dist/Intl.min.js",
+    "/bower_components/intl/locale-data/json/en.json",
+    "/bower_components/es6-promise/es6-promise.auto.min.js",
+    "/bower_components/fetch/fetch.js",
+    "/bower_components/intl-messageformat/dist/intl-messageformat.min.js",
+    "/bower_components/intl-messageformat/dist/locale-data/en.js"
   ],
   navigateFallback: 'index.html',
+  navigateFallbackWhitelist: [/^(?!\/__)/]
 };

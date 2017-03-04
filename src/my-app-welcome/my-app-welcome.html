@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 
@@ -33,7 +34,7 @@
       }
     </style>
 
-    <firebase-auth id="auth" user="{{user}}" provider="google" on-error="_handleError">
+    <firebase-auth id="authGoogle" user="{{user}}" provider="google" on-error="_handleError">
     </firebase-auth>
 
     <app-drawer-layout fullbleed>
@@ -48,7 +49,7 @@
 
         <div class="content">
           <template is="dom-if" if="[[showLoginOptions]]">
-            <my-social-google-button on-tap="_onSigninTap"></my-social-google-button>
+            <my-social-google-button on-tap="_onSigninGoogleTap"></my-social-google-button>
           </template>          
         </div>
       </app-header-layout>
@@ -74,13 +75,13 @@
         }
       },
 
-      signIn: function () {
+      signIn: function (authComp) {
         var that = this;
-        return this.$.auth.signInWithPopup()
+        return authComp.signInWithPopup()
             .then(function(response) {
               // successful authentication response here
               //console.log('[FIREBASE][AUTH]:', response);
-              that.fire('signin-response', { auth: that.$.auth, data: response });
+              that.fire('signin-response', { auth: authComp, data: response });
             })
             .catch(function(error) {
               // unsuccessful authentication response here
@@ -93,8 +94,8 @@
         console.error(e);
       },
 
-      _onSigninTap: function () {
-        this.signIn();
+      _onSigninGoogleTap: function () {
+        this.signIn(this.$.authGoogle);
       },
     });
   </script>
