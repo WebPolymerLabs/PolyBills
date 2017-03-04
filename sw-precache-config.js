@@ -1,28 +1,19 @@
-/**
- * @license
- * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
- */
-
-/* eslint-env node */
-
 module.exports = {
+  stripPrefix: '.build/',
   staticFileGlobs: [
-    '/index.html',
-    '/manifest.json',
-    '/images/**/*',
-    '/scripts/**/*',
-    "/bower_components/webcomponentsjs/webcomponents-lite.min.js",
-    "/bower_components/intl/dist/Intl.min.js",
-    "/bower_components/intl/locale-data/json/en.json",
-    "/bower_components/es6-promise/es6-promise.auto.min.js",
-    "/bower_components/fetch/fetch.js",
-    "/bower_components/intl-messageformat/dist/intl-messageformat.min.js",
-    "/bower_components/intl-messageformat/dist/locale-data/en.js"
+    '.build/manifest.json',
+    '.build/index.html',
+    '.build/src/**/*',
+    '.build/fonts/**/*',
+    '.build/images/**/*',
+    '.build/scripts/**/*',
+    '.build/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    '.build/bower_components/intl/dist/Intl.min.js',
+    '.build/bower_components/intl/locale-data/json/en.json',
+    '.build/bower_components/es6-promise/es6-promise.auto.min.js',
+    '.build/bower_components/fetch/fetch.js',
+    '.build/bower_components/intl-messageformat/dist/intl-messageformat.min.js',
+    '.build/bower_components/intl-messageformat/dist/locale-data/en.js'
   ],
   navigateFallback: 'index.html',
   navigateFallbackWhitelist: [/^(?!\/__)/]

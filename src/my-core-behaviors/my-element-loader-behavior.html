@@ -2,9 +2,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <script>
-window.PolyBills = window.PolyBills || {};
-(function(PolyBills){
-
+  window.PolyBills = window.PolyBills || {};
+  
+  /*
+  * @polymerBehavior PolyBills.ElementLoaderBehavior
+  */
   PolyBills.ElementLoaderBehaviorImpl = {
 
     requestHeap: [],
@@ -18,14 +20,14 @@ window.PolyBills = window.PolyBills || {};
         onError: onError
       };
 
-      if(this.isRequestInProgress){
+      if (this.isRequestInProgress) {
         this.requestHeap.push(params);
-      }else{
+      } else {
         this.loadResources(elementImportUrl, onComplete, onError);
       }
     },
 
-    loadResources: function(elementImportUrl, onComplete, onError){
+    loadResources: function (elementImportUrl, onComplete, onError) {
       var that = this;
       this.isRequestInProgress = true;
 
@@ -41,7 +43,7 @@ window.PolyBills = window.PolyBills || {};
 
               that.isRequestInProgress = false;
 
-              if(that.requestHeap.length){
+              if (that.requestHeap.length) {
                 var params = that.requestHeap.shift();
                 this.loadResources(params.elementImportUrl, params.onComplete, params.onError);
               }
@@ -63,5 +65,4 @@ window.PolyBills = window.PolyBills || {};
     PolyBills.ElementLoaderBehaviorImpl
   ];
 
-}(window.PolyBills));
 </script>

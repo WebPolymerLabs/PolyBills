@@ -34,7 +34,7 @@
     "intl": "^1.2.5",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "paper-input-date-picker": "WebPaperElements/paper-input-date-picker#^0.21.0",
-    "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.29.2"
+    "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.30.4"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
