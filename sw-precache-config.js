@@ -29,6 +29,10 @@ module.exports = {
     {
       urlPattern: /\/unsplash\.it\/200\/200\//,
       handler: 'networkFirst'
+    },
+    {
+      urlPattern: /polybills-.+\.firebaseio\.com\/categories\.json/,
+      handler: 'networkFirst'
     }
   ]
 };

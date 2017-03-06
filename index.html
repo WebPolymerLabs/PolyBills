@@ -1,142 +1,159 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Poly Bills</title>
-    <meta name="description" content="Poly Bills - Personal Bills Management">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <link rel="icon" href="/images/favicon.ico">
+  <title>Poly Bills</title>
+  <meta name="description" content="Poly Bills - Personal Bills Management">
 
-    <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/images/favicon.ico">
 
-    <!-- See https://goo.gl/qRE0vM -->
-    <meta name="theme-color" content="#3f51b5">
+  <!-- See https://goo.gl/OOhYW5 -->
+  <link rel="manifest" href="/manifest.json">
 
-    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Poly Bills">
+  <!-- See https://goo.gl/qRE0vM -->
+  <meta name="theme-color" content="#3f51b5">
 
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Poly Bills">
+  <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Poly Bills">
 
-    <!-- Homescreen icons -->
-    <link rel="apple-touch-icon" href="/images/manifest/icon-48x48.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/manifest/icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="96x96" href="/images/manifest/icon-96x96.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/images/manifest/icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="/images/manifest/icon-192x192.png">
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Poly Bills">
 
-    <!-- Tile icon for Windows 8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
-    <meta name="msapplication-TileColor" content="#3f51b5">
-    <meta name="msapplication-tap-highlight" content="no">
+  <!-- Homescreen icons -->
+  <link rel="apple-touch-icon" href="/images/manifest/icon-48x48.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/manifest/icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="96x96" href="/images/manifest/icon-96x96.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/manifest/icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/images/manifest/icon-192x192.png">
 
-    <!-- build:js /scripts/app-header-scripts.js -->
-    <script src="/scripts/check-load-polyfills.js"></script>
-    <!-- endbuild -->
+  <!-- Tile icon for Windows 8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#3f51b5">
+  <meta name="msapplication-tap-highlight" content="no">
 
-    <script>
-      // Setup Polymer options
-      window.Polymer = {
-        dom: 'shadow',
-        lazyRegister: true
-      };
+  <!-- build:js /scripts/.inline-app-header-scripts.js inline -->
+  <script src="/scripts/check-load-polyfills.js"></script>
+  <!-- endbuild -->
 
-      // Load webcomponentsjs polyfill if browser does not support native Web Components
-      (function() {
-        'use strict';
-        /* Web Components Polyfill*/
-        window.PolyfillHelpers.loadPolyfillLib(
-          function () {
-            return ('registerElement' in document
-              && 'import' in document.createElement('link')
-              && 'content' in document.createElement('template')
+  <script>
+    // Setup Polymer options
+    window.Polymer = {
+      dom: 'shadow',
+      lazyRegister: true
+    };
+
+    // Load webcomponentsjs polyfill if browser does not support native Web Components
+    (function () {
+      'use strict';
+      /* Web Components Polyfill*/
+      window.PolyfillHelpers.loadPolyfillLib(
+        function () {
+          return ('registerElement' in document
+            && 'import' in document.createElement('link')
+            && 'content' in document.createElement('template')
+          );
+        },
+        '/bower_components/webcomponentsjs/webcomponents-lite.min.js', { async: true },
+        function (polyfillUsed) {
+          console.debug('[PolyfillHelpers.loadPolyfillLib][WebComponents]->polyfillUsed: ', polyfillUsed);
+          // For native Imports, manually fire WebComponentsReady so user code
+          // can use the same code path for native and polyfill'd imports.
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', { bubbles: true })
             );
-          },
-          '/bower_components/webcomponentsjs/webcomponents-lite.min.js', { async: true },
-          function(polyfillUsed) {
-            console.debug('[PolyfillHelpers.loadPolyfillLib][WebComponents]->polyfillUsed: ', polyfillUsed);
-            // For native Imports, manually fire WebComponentsReady so user code
-            // can use the same code path for native and polyfill'd imports.
-            if (!window.HTMLImports) {
-              document.dispatchEvent(
-                new CustomEvent('WebComponentsReady', {bubbles: true})
-              );
-            }
           }
-        );
+        }
+      );
 
-        /* Intl Polyfill*/
-        var intlPFillCheck = function () { return ('Intl' in window); };
-        window.PolyfillHelpers.loadPolyfillLib(
-          intlPFillCheck,
-          '/bower_components/intl/dist/Intl.min.js', { async: false },
-          function(polyfillUsed) {
-            console.debug('[PolyfillHelpers.loadPolyfillLib][Intl]->polyfillUsed: ', polyfillUsed);
-          }
-        );
-        window.PolyfillHelpers.loadPolyfillLib(
-          intlPFillCheck,
-          '/bower_components/intl/locale-data/json/en.json', { async: false },
-          function(polyfillUsed) {
-            console.debug('[PolyfillHelpers.loadPolyfillLib][Intl-localce-en]->polyfillUsed: ', polyfillUsed);
-          }
-        );
+      /* Intl Polyfill*/
+      var intlPFillCheck = function () { return ('Intl' in window); };
+      window.PolyfillHelpers.loadPolyfillLib(
+        intlPFillCheck,
+        '/bower_components/intl/dist/Intl.min.js', { async: false },
+        function (polyfillUsed) {
+          console.debug('[PolyfillHelpers.loadPolyfillLib][Intl]->polyfillUsed: ', polyfillUsed);
+        }
+      );
+      window.PolyfillHelpers.loadPolyfillLib(
+        intlPFillCheck,
+        '/bower_components/intl/locale-data/json/en.json', { async: false },
+        function (polyfillUsed) {
+          console.debug('[PolyfillHelpers.loadPolyfillLib][Intl-localce-en]->polyfillUsed: ', polyfillUsed);
+        }
+      );
 
-        /* Promise Polyfill*/
-        window.PolyfillHelpers.loadPolyfillLib(
-          function () { return ('Promise' in window); },
-          '/bower_components/es6-promise/es6-promise.auto.min.js', { async: false },
-          function(polyfillUsed) {
-            console.debug('[PolyfillHelpers.loadPolyfillLib][Promise]->polyfillUsed: ', polyfillUsed);
-          }
-        );
+      /* Promise Polyfill*/
+      window.PolyfillHelpers.loadPolyfillLib(
+        function () { return ('Promise' in window); },
+        '/bower_components/es6-promise/es6-promise.auto.min.js', { async: false },
+        function (polyfillUsed) {
+          console.debug('[PolyfillHelpers.loadPolyfillLib][Promise]->polyfillUsed: ', polyfillUsed);
+        }
+      );
 
-        /* Fetch Polyfill*/
-        window.PolyfillHelpers.loadPolyfillLib(
-          function () { return ('fetch' in window); },
-          '/bower_components/fetch/fetch.js', { async: false },
-          function(polyfillUsed) {
-            console.debug('[PolyfillHelpers.loadPolyfillLib][Fetch]->polyfillUsed: ', polyfillUsed);
-          }
-        );
+      /* Fetch Polyfill*/
+      window.PolyfillHelpers.loadPolyfillLib(
+        function () { return ('fetch' in window); },
+        '/bower_components/fetch/fetch.js', { async: false },
+        function (polyfillUsed) {
+          console.debug('[PolyfillHelpers.loadPolyfillLib][Fetch]->polyfillUsed: ', polyfillUsed);
+        }
+      );
 
-        // Changed
-      })();
+      // Changed
+    })();
 
-      // Load pre-caching Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
-        });
-      }
-    </script>
+    // Load pre-caching Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }
+  </script>
 
-    <!-- build:js /scripts/app-header-scripts_2.js -->
-    <script src="/bower_components/intl-messageformat/dist/intl-messageformat.min.js"></script>
-    <script src="/bower_components/intl-messageformat/dist/locale-data/en.js"></script>
-    <!-- endbuild -->
+  <!-- build:js /scripts/app-header-scripts_2.js async -->
+  <script src="/bower_components/intl-messageformat/dist/intl-messageformat.min.js"></script>
+  <script src="/bower_components/intl-messageformat/dist/locale-data/en.js"></script>
+  <!-- endbuild -->
 
-    <link rel="import" href="/src/my-app-shell.html">
+  <link rel="import" href="/src/my-app-shell.html" async>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      background-color: #eeeeee;
+      /* Changed */
+      overflow: hidden;
+    }
+  </style>
+  <noscript>
     <style>
-      body {
-        margin: 0;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        line-height: 1.5;
-        min-height: 100vh;
-        background-color: #eeeeee;
-        /* Changed */
-        overflow: hidden;
+      body * {
+        /*hides all elements inside the body*/
+        display: none;
+      }
+
+      h2 {
+        /* even if this h1 is inside head tags it will be first hidden, so we have to display it again after all body elements are hidden*/
+        margin: 24px;
+        display: block;
       }
     </style>
-  </head>
-  <body>
-    <my-app-shell></my-app-shell>
-  </body>
+    <h2>JavaScript is not enabled, this app requires JavaScript to run properly. Please check your browser settings and enable it.</h2>
+  </noscript>
+</head>
+<body>
+  <my-app-shell></my-app-shell>
+</body>
+
 </html>

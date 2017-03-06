@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
@@ -100,6 +101,8 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
+    <app-scrollpos-control selected="{{page}}"></app-scrollpos-control>
+
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer>
@@ -161,6 +164,10 @@
         }
       },
 
+      get $scrollPosControl() {
+        return this.$$('app-scrollpos-control');
+      },
+
       observers: [
         '_routePageChanged(routeData.page)'
       ],
@@ -176,7 +183,8 @@
 
       ready: function () {
         window.PolyBills.AppContext.appScroller = this.$.appHeaderLayout.header.scrollTarget;
-        //this.$.menuAppHeader.scrollTarget = window.PolyBills.AppContext.appScroller;
+        this.$scrollPosControl.scrollTarget = window.PolyBills.AppContext.appScroller;
+
         console.timeEnd('[my-app-main][ready]');
       },
 

@@ -114,20 +114,7 @@ gulp.task('build-html', () => {
   return gulp.src(['.tmp-build/**/*.html'], {
     base: tmpBuildDirectory
   })
-    // .pipe(gulp.dest(buildDirectory))
     .pipe(assets)
-    .pipe($.if('*.html', inlinesource({
-      attribute: 'inline-style',
-      rootpath: tmpBuildDirectory,
-    })))
-    .pipe($.if('*.html', inlinesource({
-      attribute: 'inline-script',
-      rootpath: tmpBuildDirectory,
-    })))
-    .pipe($.if('*.html', inlinesource({
-      attribute: 'inline-bower',
-      rootpath: tmpBuildDirectory,
-    })))
     // Concatenate And Minify JavaScript
     .pipe($.if('*.js', $.uglify({ preserveComments: 'license', output: { ascii_only: true } })))
     // Concatenate And Minify Styles
@@ -138,6 +125,16 @@ gulp.task('build-html', () => {
     // Output Files
     .pipe(gulp.dest(buildDirectory))
     .pipe($.size({ title: 'html' }));
+});
+
+gulp.task('minify-inline', function() {
+    return gulp.src('.build/**/*.html')
+        .pipe(inlinesource({
+            attribute: 'inline',
+            rootpath: buildDirectory,
+        }))
+        .pipe(gulp.dest(buildDirectory))
+        .pipe($.size({title: 'minify-inline'}));
 });
 
 gulp.task('build-html-minify', () => {
@@ -165,6 +162,7 @@ gulp.task('build', (cb) => {
     'polymer-build',
     'build-html',
     'copy-dist',
+    'minify-inline',
     'build-html-minify',
     'generate-service-worker',
     'clean-tmp',
