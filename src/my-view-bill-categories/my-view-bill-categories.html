@@ -7,6 +7,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/app-storage/app-network-status-behavior.html">
 
 <link rel="import" href="../my-app-styles/shared-styles.html">
 
@@ -60,6 +61,10 @@
     Polymer({
       is: 'my-view-bill-categories',
 
+      behaviors: [
+        Polymer.AppNetworkStatusBehavior
+      ],
+
       properties: {
         newCard: {
           type: Object,
@@ -90,13 +95,21 @@
       _onButtonSaveTap: function () {
         var newKey = firebase.default.database().ref().child('categories').push().key;
         var updates = {};
-        updates['/categories/' + newKey] = this.newCard;
 
+        updates['/categories/' + newKey] = this.newCard;
         var that = this;
         firebase.default.database().ref().update(updates)
           .then(function () {
             that.$.dialogNewCategory.close();
+          })
+          .catch(function (err) {
+            console.error(err);
+            that.$.dialogNewCategory.close();
           });
+        
+        if (!this.online) {
+          this.$.dialogNewCategory.close();
+        }
       },
     });
   </script>

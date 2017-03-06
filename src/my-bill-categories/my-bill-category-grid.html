@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
@@ -29,7 +30,14 @@
         data="{{items}}">
     </firebase-query>
 
-    <iron-list id="cardList" items="[[items]]" as="card" grid>
+    <app-indexeddb-mirror
+        session="session-key-413"
+        key="billCategories"
+        data="{{items}}"
+        persisted-data="{{localItems}}">
+    </app-indexeddb-mirror>
+
+    <iron-list id="cardList" items="[[localItems]]" as="card" grid>
       <template>
         <my-bill-category-grid-card-container class="grid-card" model="[[card]]"></my-bill-category-grid-card-container>
       </template>
@@ -43,11 +51,15 @@
       properties: {
         items: {
           type: Array,
+          notify: true,
+          observer: '_itemsChanged' 
+        },
+        localItems: {
+          type: Array,
           value: function () {
             return [];
           },
           notify: true,
-          observer: '_itemsChanged' 
         }
       },
 

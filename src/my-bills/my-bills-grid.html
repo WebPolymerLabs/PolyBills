@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
@@ -26,7 +27,14 @@
         data="{{items}}">
     </firebase-query>
 
-    <iron-list id="listItems" items="[[items]]" as="bill">
+    <app-indexeddb-mirror
+        session="session-key-413"
+        key="bills"
+        data="{{items}}"
+        persisted-data="{{localItems}}">
+    </app-indexeddb-mirror>
+
+    <iron-list id="listItems" items="[[localItems]]" as="bill">
       <template>
         <my-bill-item-container class="grid-item" model="[[bill]]"></my-bill-item-container>
       </template>
@@ -44,11 +52,14 @@
       properties: {
         items: {
           type: Array,
-          value: function () {
-            return [
-            ];
-          },
           notify: true
+        },
+        localItems: {
+          type: Array,
+          value: function () {
+            return [];
+          },
+          notify: true,
         }
       },
 

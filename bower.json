@@ -35,7 +35,8 @@
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "paper-input-date-picker": "WebPaperElements/paper-input-date-picker#^0.21.0",
     "paper-input-autocomplete-chips": "WebPaperElements/paper-input-autocomplete-chips#^0.30.4",
-    "localforage": "^1.5.0"
+    "localforage": "^1.5.0",
+    "app-storage": "PolymerElements/app-storage#^0.9.8"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
