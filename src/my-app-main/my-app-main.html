@@ -1,5 +1,3 @@
-<script>console.time('[my-app-main][created]');</script>
-
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
@@ -190,25 +188,15 @@
         this.page = page || 'home';
       },
 
-      created: function () {
-        console.timeEnd('[my-app-main][created]');
-        console.time('[my-app-main][ready]');
-      },
-
       ready: function () {
         window.PolyBills.AppContext.appScroller = this.$.appHeaderLayout.header.scrollTarget;
         this.$scrollPosControl.scrollTarget = window.PolyBills.AppContext.appScroller;
-
-        console.timeEnd('[my-app-main][ready]');
       },
 
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
         var that = this;
-        console.time('[my-view-' + page + '][load]');
-        this.resolveLoadElement('../my-view-' + page + '/my-view-' + page + '.html', function () {
-          console.timeEnd('[my-view-' + page + '][load]');
-        }, function () {
+        this.resolveLoadElement('../my-view-' + page + '/my-view-' + page + '.html', null, function () {
           that._showPage404();          
         });
       },
