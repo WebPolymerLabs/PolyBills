@@ -21,6 +21,7 @@
     "bower_components/es6-promise/es6-promise.auto.min.js",
     "bower_components/fetch/fetch.js",
     "bower_components/intl-messageformat/dist/intl-messageformat.min.js",
-    "bower_components/intl-messageformat/dist/locale-data/en.js"
+    "bower_components/intl-messageformat/dist/locale-data/en.js",
+    "bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js"
   ]
 }

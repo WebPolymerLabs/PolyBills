@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input-date-picker/paper-input-date-picker.html">
 <link rel="import" href="../../bower_components/paper-input-autocomplete-chips/paper-input-autocomplete-chips.html">
+<link rel="import" href="../../bower_components/app-storage/app-network-status-behavior.html">
 
 <link rel="import" href="../my-app-styles/shared-styles.html">
 
@@ -86,6 +87,7 @@
       is: 'my-view-bills', 
 
       behaviors: [
+        Polymer.AppNetworkStatusBehavior,
         PolyBills.UserInfoBehavior
       ],
 
@@ -172,6 +174,10 @@
           .then(function () {
             that.$.dialogNewBill.close();
           });
+
+        if (!this.online) {
+          this.$.dialogNewCategory.close();
+        }
       },
     });
   </script>

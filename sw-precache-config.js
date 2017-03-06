@@ -13,7 +13,8 @@ module.exports = {
     '.build/bower_components/es6-promise/es6-promise.auto.min.js',
     '.build/bower_components/fetch/fetch.js',
     '.build/bower_components/intl-messageformat/dist/intl-messageformat.min.js',
-    '.build/bower_components/intl-messageformat/dist/locale-data/en.js'
+    '.build/bower_components/intl-messageformat/dist/locale-data/en.js',
+    '.build/bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js'
   ],
   navigateFallback: 'index.html',
   navigateFallbackWhitelist: [/^(?!\/__)/],
