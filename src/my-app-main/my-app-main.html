@@ -1,6 +1,7 @@
 <script>console.time('[my-app-main][created]');</script>
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
@@ -11,13 +12,16 @@
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/app-layout/app-scrollpos-control/app-scrollpos-control.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/device-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-avatar-button/paper-avatar-button.html">
 <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/app-storage/app-network-status-behavior.html">
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 
@@ -29,6 +33,7 @@
 
 <dom-module id="my-app-main">
   <template>
+    <style include="iron-positioning"></style>
     <style>
       :host {
         --app-primary-color: #4285f4;
@@ -92,6 +97,11 @@
         background-color: #F44336;
         color: white;
       }
+
+      .offline-indicator {
+        color: #c31406;
+        margin-right: 24px;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -107,7 +117,10 @@
       <!-- Drawer content -->
       <app-drawer>
         <app-header id="menuAppHeader">
-          <app-toolbar>Menu</app-toolbar>
+          <app-toolbar>
+            <iron-icon class="offline-indicator" icon="device:signal-wifi-off" hidden$="[[online]]"></iron-icon>
+            <div>Menu</div>
+          </app-toolbar>
         </app-header>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="/">Home</a>
@@ -153,6 +166,7 @@
       is: 'my-app-main',
 
       behaviors: [
+        Polymer.AppNetworkStatusBehavior,
         PolyBills.ElementLoaderBehavior
       ],
 
