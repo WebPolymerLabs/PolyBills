@@ -135,6 +135,19 @@
       /* Changed */
       overflow: hidden;
     }
+
+    .preloader {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      background-color: white;
+      background-image: url(/images/preloader.gif);
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+    }
   </style>
   <noscript>
     <style>
@@ -153,7 +166,9 @@
   </noscript>
 </head>
 <body>
-  <my-app-shell></my-app-shell>
+  <my-app-shell>
+    <div class="preloader"></div>
+  </my-app-shell>
 </body>
 
 </html>
