@@ -25,7 +25,7 @@ module.exports = {
     },
     {
       urlPattern: /\/lh5\.googleusercontent\.com\//,
-      handler: 'networkFirst'
+      handler: 'fastest'
     },
     {
       urlPattern: /\/unsplash\.it\/200\/200\//,
@@ -33,7 +33,7 @@ module.exports = {
     },
     {
       urlPattern: /polybills-.+\.firebaseio\.com\/categories\.json/,
-      handler: 'networkFirst'
+      handler: 'fastest'
     }
   ]
 };
