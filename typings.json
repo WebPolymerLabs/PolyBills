@@ -1,10 +1,7 @@
 {
   "globalDependencies": {
     "es6-promise": "registry:dt/es6-promise#0.0.0+20160726191732",
-    "localforage": "registry:dt/localforage#0.0.0+20161130215418",
     "moment": "registry:dt/moment#2.11.1+20161010105546"
   },
-  "globalDevDependencies": {
-    "gulp-load-plugins": "registry:dt/gulp-load-plugins#0.0.0+20160510010627"
-  }
+  "globalDevDependencies": {}
 }
